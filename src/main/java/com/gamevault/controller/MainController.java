@@ -1,6 +1,5 @@
 package com.gamevault.controller;
 
-import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -45,6 +44,7 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+<<<<<<< HEAD
         loadImage("/images/logo-dragon.png",      logoImage);
         loadImage("/images/logo-tete-dragon.png", avatarTopBar);
         loadImage("/images/logo-tete-dragon.png", avatarSidebar);
@@ -122,5 +122,7 @@ public class MainController implements Initializable {
     @FXML
     private void onDelete() {
         overlay.setVisible(false);
+=======
+>>>>>>> 088baca100b1af8a71c667b6952a28860dfd91fb
     }
 }

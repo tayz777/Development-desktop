@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane
+        xmlns="http://javafx.com/javafx/21"
+        xmlns:fx="http://javafx.com/fxml/1"
+        fx:controller="com.gamevault.controller.GameListController"
+        prefWidth="1100"
+        prefHeight="700"
+        style="-fx-background-color: #0d1b3e;">
+
+    <!-- ── Sidebar ────────────────────────────────────────────────────────── -->
+    <left>
+        <VBox prefWidth="220" spacing="8"
+              style="-fx-background-color: #0d1b3e; -fx-padding: 20 0 20 0;">
+
+            <!-- Logo placeholder — remplacer par ImageView quand assets dispo -->
+            <Label text="DRAGO Games" styleClass="sidebar-logo-label"/>
+
+            <!-- Nav -->
+            <Button fx:id="btnAccueil"    text="Accueil"        maxWidth="Infinity" styleClass="nav-button"/>
+            <Button fx:id="btnAjouter"    text="Ajouter un jeu" maxWidth="Infinity" styleClass="nav-button"/>
+            <Button fx:id="btnCollection" text="Collection"     maxWidth="Infinity" styleClass="nav-button-active"/>
+            <Button fx:id="btnAPropos"    text="A Propos"       maxWidth="Infinity" styleClass="nav-button"/>
+
+            <Region VBox.vgrow="ALWAYS"/>
+
+            <!-- User placeholder — remplacer par ImageView quand assets dispo -->
+            <VBox alignment="CENTER" spacing="6" style="-fx-padding: 0 0 12 0;">
+                <Region prefWidth="60" prefHeight="60"
+                        style="-fx-background-color: #2a4080; -fx-background-radius: 30;"/>
+                <Label text="Nom d'utilisateur" styleClass="sidebar-username"/>
+            </VBox>
+        </VBox>
+    </left>
+
+    <!-- ── Contenu principal ──────────────────────────────────────────────── -->
+    <center>
+        <VBox spacing="16" VBox.vgrow="ALWAYS"
+              style="-fx-background-color: #0d1b3e; -fx-padding: 20 20 20 20;">
+
+            <!-- Barre de recherche -->
+            <HBox alignment="CENTER_LEFT">
+                <TextField fx:id="searchField" promptText="Recherche"
+                           prefWidth="300" styleClass="search-field"/>
+            </HBox>
+
+            <!-- Tableau -->
+            <TableView fx:id="gameTableView" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="colCover"    text=""           prefWidth="70"  minWidth="70" maxWidth="70" resizable="false"/>
+                    <TableColumn fx:id="colTitle"    text="Titre"      prefWidth="260"/>
+                    <TableColumn fx:id="colPlatform" text="Plateforme" prefWidth="220"/>
+                    <TableColumn fx:id="colYear"     text="Annee"      prefWidth="110"/>
+                    <TableColumn fx:id="colRating"   text="Note"       prefWidth="80"/>
+                </columns>
+                <placeholder>
+                    <Label text="Aucun jeu dans la collection."
+                           style="-fx-text-fill: #6080b0; -fx-font-size: 14;"/>
+                </placeholder>
+            </TableView>
+        </VBox>
+    </center>
+
+</BorderPane>
