@@ -172,7 +172,9 @@
              ═══════════════════════════════════════════════════════════════ -->
         <StackPane fx:id="overlay" visible="false" styleClass="overlay-backdrop">
 
-            <StackPane styleClass="detail-card" maxWidth="700" maxHeight="510"
+            <StackPane styleClass="detail-card"
+                       prefWidth="10000" prefHeight="10000"
+                       maxWidth="Infinity" maxHeight="Infinity"
                        StackPane.alignment="CENTER">
 
                 <!-- Placeholder image de fond (sera remplacé par la vraie jaquette) -->

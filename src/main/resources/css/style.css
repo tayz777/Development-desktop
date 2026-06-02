@@ -1,18 +1,310 @@
-/* =============================================================================
-   GameVault – Base globale (chargée sur toutes les scènes)
+
+﻿/* =============================================================================
+   GameVault – style.css
+   Thème : dark navy #0a1628 + accent violet #5b3fd4
    ============================================================================= */
 
+/* ── Base ────────────────────────────────────────────────────────────────────── */
 .root {
     -fx-font-family: "Segoe UI", sans-serif;
-    -fx-background-color: #0d1b3e;
+    -fx-background-color: #0a1628;
 }
-
 .root-pane {
-    -fx-background-color: #0d1b3e;
+    -fx-background-color: #0a1628;
 }
 
-/* Placeholder main.fxml */
-.placeholder-container { -fx-background-color: #0d1b3e; }
-.placeholder-icon       { -fx-font-size: 64px; }
-.placeholder-label      { -fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold; }
-.placeholder-hint       { -fx-text-fill: #a0b4d6; -fx-font-size: 13px; }
+/* =============================================================================
+   SIDEBAR
+   ============================================================================= */
+.sidebar {
+    -fx-background-color: #0d1f45;
+    -fx-border-color: transparent #1e3870 transparent transparent;
+    -fx-border-width: 0 1 0 0;
+}
+.nav-btn {
+    -fx-background-color: transparent;
+    -fx-background-radius: 10;
+    -fx-border-width: 0;
+    -fx-text-fill: rgba(255,255,255,0.72);
+    -fx-font-size: 13px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 11 16 11 16;
+    -fx-cursor: hand;
+}
+.nav-btn:hover {
+    -fx-background-color: rgba(255,255,255,0.07);
+    -fx-background-radius: 10;
+    -fx-text-fill: white;
+}
+.nav-btn-active {
+    -fx-background-color: #1a3d8a;
+    -fx-background-radius: 10;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+.sidebar-avatar {
+    -fx-background-color: #5b3fd4;
+    -fx-background-radius: 45;
+    -fx-min-width: 90;
+    -fx-min-height: 90;
+    -fx-max-width: 90;
+    -fx-max-height: 90;
+}
+.username-label {
+    -fx-text-fill: rgba(255,255,255,0.75);
+    -fx-font-size: 12px;
+}
+
+/* =============================================================================
+   TOPBAR
+   ============================================================================= */
+.topbar {
+    -fx-background-color: #0a1628;
+    -fx-border-color: transparent transparent #1a2f5a transparent;
+    -fx-border-width: 0 0 1 0;
+}
+.topbar-avatar {
+    -fx-background-color: #5b3fd4;
+    -fx-background-radius: 29;
+    -fx-min-width: 58;
+    -fx-min-height: 58;
+    -fx-max-width: 58;
+    -fx-max-height: 58;
+}
+
+/* =============================================================================
+   BARRE DE RECHERCHE
+   ============================================================================= */
+.search-field {
+    -fx-background-color: #e8eaf0;
+    -fx-background-radius: 22;
+    -fx-border-color: #6b8fd4;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 22;
+    -fx-padding: 8 18 8 18;
+    -fx-font-size: 13px;
+    -fx-prompt-text-fill: #7a84a0;
+    -fx-text-fill: #1a2a4a;
+}
+.search-field:focused {
+    -fx-background-color: #f0f2f8;
+    -fx-border-color: #4a7ae0;
+    -fx-border-width: 2;
+}
+
+/* =============================================================================
+   ZONE DE DÉFILEMENT
+   ============================================================================= */
+.main-scroll {
+    -fx-background-color: #0a1628;
+    -fx-background: #0a1628;
+    -fx-border-color: transparent;
+}
+.main-scroll .viewport {
+    -fx-background-color: #0a1628;
+}
+.main-scroll:focused {
+    -fx-border-color: transparent;
+}
+.main-scroll .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 8;
+}
+.main-scroll .scroll-bar:vertical .thumb {
+    -fx-background-color: rgba(255,255,255,0.18);
+    -fx-background-radius: 4;
+}
+.main-scroll .scroll-bar:vertical .track {
+    -fx-background-color: transparent;
+}
+.main-scroll .scroll-bar:vertical .increment-button,
+.main-scroll .scroll-bar:vertical .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+.main-scroll .scroll-bar:vertical .increment-arrow,
+.main-scroll .scroll-bar:vertical .decrement-arrow {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+/* =============================================================================
+   CARTE MIS EN AVANT
+   ============================================================================= */
+.featured-card {
+    -fx-background-color: #0d2050;
+    -fx-background-radius: 14;
+    -fx-border-color: #1e3870;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 14;
+    -fx-cursor: hand;
+}
+.featured-card:hover {
+    -fx-border-color: #4a7ae0;
+    -fx-border-width: 2;
+}
+.featured-cover-full {
+    -fx-background-color: #1a3060;
+    -fx-background-radius: 14;
+}
+.featured-title {
+    -fx-text-fill: white;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.8), 8, 0, 0, 2);
+}
+
+/* =============================================================================
+   CARTES JEUX
+   ============================================================================= */
+.game-card {
+    -fx-background-color: #0d2050;
+    -fx-background-radius: 14;
+    -fx-border-color: #1e3870;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 14;
+}
+.game-card-title {
+    -fx-text-fill: rgba(255,255,255,0.85);
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+/* =============================================================================
+   PANNEAUX BAS
+   ============================================================================= */
+.panel-title {
+    -fx-text-fill: rgba(255,255,255,0.85);
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+.favorite-item {
+    -fx-text-fill: rgba(255,255,255,0.80);
+    -fx-font-size: 12px;
+}
+
+/* =============================================================================
+   OVERLAY BACKDROP
+   ============================================================================= */
+.overlay-backdrop {
+    -fx-background-color: rgba(0, 5, 20, 0.72);
+}
+
+/* =============================================================================
+   DETAIL CARD  (affichage plein écran)
+   ============================================================================= */
+.detail-card {
+    -fx-background-color: #0d1f45;
+    -fx-background-radius: 18;
+    -fx-border-color: #3a5fad;
+    -fx-border-width: 2;
+    -fx-border-radius: 18;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.7), 40, 0, 0, 8);
+}
+.detail-bg {
+    -fx-background-color: #1a3060;
+    -fx-background-radius: 18;
+}
+.detail-gradient {
+    -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, transparent, #060f28);
+    -fx-background-radius: 0 0 18 18;
+}
+
+/* Bouton fermer */
+.detail-close-btn {
+    -fx-background-color: rgba(0,0,0,0.55);
+    -fx-background-radius: 20;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-min-width: 36;
+    -fx-min-height: 36;
+    -fx-max-width: 36;
+    -fx-max-height: 36;
+    -fx-padding: 0;
+    -fx-cursor: hand;
+}
+.detail-close-btn:hover {
+    -fx-background-color: rgba(60,60,60,0.80);
+}
+
+/* Tags */
+.detail-tag {
+    -fx-background-color: rgba(255,255,255,0.18);
+    -fx-background-radius: 12;
+    -fx-text-fill: white;
+    -fx-font-size: 11px;
+    -fx-padding: 4 10 4 10;
+}
+
+/* Titre */
+.detail-game-title {
+    -fx-text-fill: white;
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.9), 6, 0, 0, 2);
+}
+
+/* Description */
+.detail-description {
+    -fx-text-fill: rgba(255,255,255,0.82);
+    -fx-font-size: 12px;
+    -fx-line-spacing: 2;
+}
+
+/* Icônes plateformes */
+.detail-platform-icon {
+    -fx-font-size: 18px;
+    -fx-opacity: 0.85;
+}
+
+/* Bouton coeur */
+.detail-heart-btn {
+    -fx-background-color: transparent;
+    -fx-border-color: rgba(255,255,255,0.40);
+    -fx-border-width: 1.5;
+    -fx-border-radius: 20;
+    -fx-background-radius: 20;
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-min-width: 40;
+    -fx-min-height: 36;
+    -fx-cursor: hand;
+    -fx-padding: 4 12 4 12;
+}
+.detail-heart-btn:hover {
+    -fx-background-color: rgba(220,50,80,0.20);
+    -fx-border-color: #e03060;
+}
+.detail-heart-btn-active {
+    -fx-text-fill: #e03060;
+    -fx-border-color: #e03060;
+}
+
+/* Bouton Modifier */
+.detail-btn-edit {
+    -fx-background-color: #1e3d8a;
+    -fx-background-radius: 20;
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 8 24 8 24;
+    -fx-cursor: hand;
+}
+.detail-btn-edit:hover {
+    -fx-background-color: #2a52b5;
+}
+
+/* Bouton Supprimer */
+.detail-btn-delete {
+    -fx-background-color: #b52030;
+    -fx-background-radius: 20;
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 8 24 8 24;
+    -fx-cursor: hand;
+}
+.detail-btn-delete:hover {
+    -fx-background-color: #d42535;
+}
