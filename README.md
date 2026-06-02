@@ -19,16 +19,19 @@
 
 ## Lancer l'application
 
-```bash
+```powershell
 # Compiler
-mvn compile
+.\mvnw compile
 
 # Lancer
-mvn javafx:run
+.\mvnw javafx:run
 
 # Tests
-mvn test
+.\mvnw test
 ```
+
+> **Note** : `mvn` doit être dans ton PATH ou utiliser le wrapper `.\mvnw` fourni.  
+> Sur Linux/macOS : `./mvnw javafx:run`
 
 ## Structure du projet
 
