@@ -68,7 +68,7 @@ src/
 
 ## Maquette Figma
 
-> 🔗 Lien à ajouter
+> 🔗 [Lien à ajouter](https://www.figma.com/design/OdegrN42JWzY95VcM9TTpL/Sans-titre?node-id=0-1&t=ROyZuE2jsLntp2Zv-1)
 
 ## Documentation UX/UI
 

@@ -1,37 +1,228 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
+<!--
+    Layout : BorderPane racine
+      left   = sidebar
+      center = BorderPane interne (topbar + scroll)
+                  top    = topbar (barre de recherche)
+                  center = ScrollPane (contenu principal)
+-->
 <BorderPane
         xmlns="http://javafx.com/javafx/21"
         xmlns:fx="http://javafx.com/fxml/1"
         fx:controller="com.gamevault.controller.MainController"
-        prefWidth="1200"
-        prefHeight="750"
         styleClass="root-pane">
 
-    <!-- ── En-tête ──────────────────────────────────────────────────────── -->
-    <top>
-        <HBox styleClass="header" alignment="CENTER_LEFT" spacing="16">
-            <padding><Insets top="18" right="28" bottom="18" left="28"/></padding>
-            <VBox spacing="2">
-                <Label text="GAMEVAULT" styleClass="app-title"/>
-                <Label text="Gestionnaire de collection de jeux vidéo" styleClass="app-subtitle"/>
-            </VBox>
-        </HBox>
-    </top>
+    <!-- ════════════════════════════════════════════════════════════════════
+         SIDEBAR
+         ════════════════════════════════════════════════════════════════════ -->
+    <left>
+        <VBox styleClass="sidebar" prefWidth="220" minWidth="220">
 
-    <!-- ── Corps principal (placeholder) ────────────────────────────────── -->
-    <center>
-        <VBox alignment="CENTER" spacing="12" styleClass="placeholder-container">
-            <Label text="🎮" styleClass="placeholder-icon"/>
-            <Label text="Interface en cours de développement" styleClass="placeholder-label"/>
-            <Label text="Initialisation du projet réussie." styleClass="placeholder-hint"/>
+            <!-- Logo -->
+            <HBox alignment="CENTER_LEFT">
+                <padding><Insets top="20" right="16" bottom="16" left="16"/></padding>
+                <ImageView fx:id="logoImage" fitWidth="185" fitHeight="60"
+                           preserveRatio="true" smooth="true"/>
+            </HBox>
+
+            <!-- Navigation -->
+            <VBox spacing="4">
+                <padding><Insets top="6" right="12" bottom="6" left="12"/></padding>
+                <Button fx:id="btnAccueil"    onAction="#onAccueil"
+                        text="&#x2302;   Accueil"
+                        styleClass="nav-btn" maxWidth="Infinity"/>
+                <Button fx:id="btnAjouter"    onAction="#onAjouter"
+                        text="+   Ajouter un jeu"
+                        styleClass="nav-btn" maxWidth="Infinity"/>
+                <Button fx:id="btnCollection" onAction="#onCollection"
+                        text="&#x2630;   Collection"
+                        styleClass="nav-btn" maxWidth="Infinity"/>
+                <Button fx:id="btnAPropos"    onAction="#onAPropos"
+                        text="&#x24D8;   &#xC0; Propos"
+                        styleClass="nav-btn" maxWidth="Infinity"/>
+            </VBox>
+
+            <!-- Spacer -->
+            <Region VBox.vgrow="ALWAYS"/>
+
+            <!-- Utilisateur -->
+            <VBox alignment="CENTER" spacing="10">
+                <padding><Insets top="16" right="16" bottom="28" left="16"/></padding>
+                <StackPane styleClass="sidebar-avatar" prefWidth="90" prefHeight="90">
+                    <ImageView fx:id="avatarSidebar" fitWidth="60" fitHeight="60"
+                               preserveRatio="true" smooth="true"/>
+                </StackPane>
+                <Label text="Nom d'utilisateur" styleClass="username-label"/>
+            </VBox>
+
         </VBox>
+    </left>
+
+    <!-- ════════════════════════════════════════════════════════════════════
+         ZONE DROITE : topbar + contenu défilable + overlay
+         ════════════════════════════════════════════════════════════════════ -->
+    <center>
+        <StackPane>
+        <BorderPane>
+
+            <!-- Topbar -->
+            <top>
+                <HBox styleClass="topbar" alignment="CENTER_LEFT" spacing="16">
+                    <padding><Insets top="14" right="22" bottom="14" left="22"/></padding>
+                    <TextField fx:id="searchField" promptText="Recherche"
+                               styleClass="search-field" prefWidth="300"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <StackPane styleClass="topbar-avatar" prefWidth="58" prefHeight="58">
+                        <ImageView fx:id="avatarTopBar" fitWidth="42" fitHeight="42"
+                                   preserveRatio="true" smooth="true"/>
+                    </StackPane>
+                </HBox>
+            </top>
+
+            <!-- Contenu principal -->
+            <center>
+                <ScrollPane fx:id="mainScrollPane" styleClass="main-scroll" fitToWidth="true"
+                            hbarPolicy="NEVER" vbarPolicy="AS_NEEDED">
+                    <VBox fx:id="contentVBox" spacing="16">
+                        <padding><Insets top="20" right="24" bottom="24" left="24"/></padding>
+
+                        <!-- Carte Minecraft mise en avant -->
+                        <StackPane styleClass="featured-card" prefHeight="200" minHeight="160"
+                                   VBox.vgrow="SOMETIMES"
+                                   onMouseClicked="#onFeaturedCardClick">
+                            <Region styleClass="featured-cover-full"/>
+                            <VBox alignment="BOTTOM_LEFT" StackPane.alignment="BOTTOM_LEFT">
+                                <padding><Insets bottom="18" left="22"/></padding>
+                                <Label text="Minecraft" styleClass="featured-title"/>
+                            </VBox>
+                        </StackPane>
+
+                        <!-- 3 cartes jeux -->
+                        <HBox spacing="14" VBox.vgrow="SOMETIMES">
+                            <VBox styleClass="game-card" HBox.hgrow="ALWAYS"
+                                  prefHeight="135" minHeight="100" alignment="BOTTOM_LEFT">
+                                <padding><Insets bottom="12" left="14"/></padding>
+                                <Label text="Nom de jeu" styleClass="game-card-title"/>
+                            </VBox>
+                            <VBox styleClass="game-card" HBox.hgrow="ALWAYS"
+                                  prefHeight="135" minHeight="100" alignment="BOTTOM_LEFT">
+                                <padding><Insets bottom="12" left="14"/></padding>
+                                <Label text="Nom de jeu" styleClass="game-card-title"/>
+                            </VBox>
+                            <VBox styleClass="game-card" HBox.hgrow="ALWAYS"
+                                  prefHeight="135" minHeight="100" alignment="BOTTOM_LEFT">
+                                <padding><Insets bottom="12" left="14"/></padding>
+                                <Label text="Nom de jeu" styleClass="game-card-title"/>
+                            </VBox>
+                        </HBox>
+
+                        <!-- Panneaux bas : catégorie + favoris (remplissent l'espace restant) -->
+                        <HBox spacing="14" VBox.vgrow="ALWAYS" minHeight="120">
+                            <VBox styleClass="game-card" prefWidth="220" minWidth="180"
+                                  maxHeight="Infinity" alignment="TOP_LEFT">
+                                <padding><Insets top="14" left="16"/></padding>
+                                <Label text="Nom catégorie" styleClass="panel-title"/>
+                            </VBox>
+                            <VBox styleClass="game-card" HBox.hgrow="ALWAYS"
+                                  maxHeight="Infinity" alignment="TOP_LEFT">
+                                <padding><Insets top="14" left="16"/></padding>
+                                <Label text="Jeux favoris" styleClass="panel-title"/>
+                                <VBox fx:id="favoritesContent" spacing="6">
+                                    <padding><Insets top="8" left="4"/></padding>
+                                </VBox>
+                            </VBox>
+                        </HBox>
+
+                    </VBox>
+                </ScrollPane>
+            </center>
+
+        </BorderPane>
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             OVERLAY : DÉTAIL DU JEU
+             ═══════════════════════════════════════════════════════════════ -->
+        <StackPane fx:id="overlay" visible="false" styleClass="overlay-backdrop">
+
+            <StackPane styleClass="detail-card" maxWidth="700" maxHeight="510"
+                       StackPane.alignment="CENTER">
+
+                <!-- Placeholder image de fond (sera remplacé par la vraie jaquette) -->
+                <Region styleClass="detail-bg"/>
+
+                <!-- Dégradé bas pour lisibilité du texte -->
+                <Region styleClass="detail-gradient" StackPane.alignment="BOTTOM_CENTER"
+                        prefHeight="320" maxWidth="Infinity"/>
+
+                <!-- Contenu superposé -->
+                <VBox StackPane.alignment="TOP_LEFT" maxWidth="Infinity" maxHeight="Infinity">
+
+                    <!-- Bouton fermer -->
+                    <HBox>
+                        <padding><Insets top="14" left="14"/></padding>
+                        <Button text="✕" onAction="#onCloseDetail" styleClass="detail-close-btn"/>
+                    </HBox>
+
+                    <Region VBox.vgrow="ALWAYS"/>
+
+                    <!-- Infos bas -->
+                    <VBox spacing="9">
+                        <padding><Insets bottom="22" right="24" left="24"/></padding>
+
+                        <!-- Tags -->
+                        <HBox spacing="8" alignment="CENTER_LEFT">
+                            <Label text="Mojang" styleClass="detail-tag"/>
+                            <Label text="Notch"  styleClass="detail-tag"/>
+                            <Label text="2009"   styleClass="detail-tag"/>
+                        </HBox>
+
+                        <!-- Titre -->
+                        <Label text="Minecraft" styleClass="detail-game-title"/>
+
+                        <!-- Description -->
+                        <Label styleClass="detail-description" wrapText="true" maxWidth="460"
+                               text="Lorem ipsum dolor sit amet consectetur. Faucibus condimentum consectetur morbi tincidunt egestas. Ultrices velit non amet consequat auctor porta sagittis sed cras. Facilisis faucibus sit pellentesque pellentesque proin aliquam tempor velit sit."/>
+
+                        <!-- Icônes plateformes -->
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <Label text="&#x1F3AE;" styleClass="detail-platform-icon"/>
+                            <Label text="&#x1F5A5;" styleClass="detail-platform-icon"/>
+                            <Label text="&#x1F4E6;" styleClass="detail-platform-icon"/>
+                        </HBox>
+
+                        <!-- Boutons action -->
+                        <HBox spacing="10" alignment="CENTER_RIGHT">
+                            <Button fx:id="btnFavorite" text="&#x2661;"
+                                    onAction="#onToggleFavorite"
+                                    styleClass="detail-heart-btn"/>
+                            <Region HBox.hgrow="ALWAYS"/>
+                            <Button text="Modifier"  onAction="#onModify"
+                                    styleClass="detail-btn-edit"/>
+                            <Button text="Supprimer" onAction="#onDelete"
+                                    styleClass="detail-btn-delete"/>
+                        </HBox>
+
+                    </VBox>
+                </VBox>
+
+            </StackPane>
+        </StackPane>
+
+    </StackPane>
     </center>
 
 </BorderPane>

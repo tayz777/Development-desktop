@@ -30,8 +30,8 @@ public class App extends Application {
         );
 
         primaryStage.setTitle(config.getProperty("app.name", "GameVault"));
-        primaryStage.setMinWidth(900);
-        primaryStage.setMinHeight(600);
+        primaryStage.setMinWidth(820);
+        primaryStage.setMinHeight(560);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
