@@ -30,7 +30,7 @@ public class App extends Application {
         Properties config = loadConfig();
 
         FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/fxml/main.fxml")
+                getClass().getResource("/fxml/login.fxml")
         );
         Parent root = loader.load();
 
