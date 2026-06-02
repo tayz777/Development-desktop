@@ -29,19 +29,25 @@ public class App extends Application {
     public void start(Stage primaryStage) throws Exception {
         Properties config = loadConfig();
 
-        FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/fxml/login.fxml")
-        );
-        Parent root = loader.load();
-
         int width  = Integer.parseInt(config.getProperty("app.window.width",  "1200"));
         int height = Integer.parseInt(config.getProperty("app.window.height", "750"));
 
+        // Sauter le login si déjà connecté
+        String fxml = com.gamevault.util.UserSession.isLoggedIn() ? "/fxml/main.fxml" : "/fxml/login.fxml";
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
+        Parent root = loader.load();
+
         Scene scene = new Scene(root, width, height);
         scene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
-        scene.getStylesheets().add(getClass().getResource("/css/login.css").toExternalForm());
+        if (com.gamevault.util.UserSession.isLoggedIn()) {
+            scene.getStylesheets().add(getClass().getResource("/css/main.css").toExternalForm());
+        } else {
+            scene.getStylesheets().add(getClass().getResource("/css/login.css").toExternalForm());
+        }
 
-        primaryStage.setTitle(config.getProperty("app.name", "GameVault"));
+        String appName = config.getProperty("app.name", "GameVault");
+        String savedUser = com.gamevault.util.UserSession.getUsername();
+        primaryStage.setTitle(savedUser.isBlank() ? appName : appName + " - " + savedUser);
         primaryStage.setMinWidth(820);
         primaryStage.setMinHeight(560);
         primaryStage.setScene(scene);
