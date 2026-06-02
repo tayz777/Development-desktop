@@ -1,6 +1,13 @@
 package com.gamevault.controller;
 
+import com.gamevault.model.Game;
+import com.gamevault.repository.GameRepositoryImpl;
+import com.gamevault.service.GameService;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -9,16 +16,21 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
+import java.util.Random;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 public class MainController implements Initializable {
 
     // ── Sidebar ───────────────────────────────────────────────────────────
-    @FXML private ImageView logoImage;
+    @FXML
+    private ImageView logoImage;
     @FXML private ImageView avatarSidebar;
     @FXML private Button    btnAccueil;
     @FXML private Button    btnAjouter;
@@ -40,19 +52,151 @@ public class MainController implements Initializable {
     @FXML private StackPane overlay;
     @FXML private Button    btnFavorite;
 
-    private boolean isFavorite = false;
+    // ── Featured card ─────────────────────────────────────────────────────
+    @FXML private Label featuredTitle;
+    @FXML private Label detailTitle;
+    @FXML private Label detailDeveloper;
+    @FXML private Label detailPublisher;
+    @FXML private Label detailYear;
+    @FXML private Label detailDescription;
+
+    // ── Game cards ────────────────────────────────────────────────────────
+    @FXML private Label     gameCard1Title;
+    @FXML private Label     gameCard2Title;
+    @FXML private Label     gameCard3Title;
+    @FXML private ImageView featuredImage;
+    @FXML private ImageView cardImage1;
+    @FXML private ImageView cardImage2;
+    @FXML private ImageView cardImage3;
+
+    private Game currentDetailGame;
+    private List<Game> cardGames = new java.util.ArrayList<>();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-<<<<<<< HEAD
         loadImage("/images/logo-dragon.png",      logoImage);
         loadImage("/images/logo-tete-dragon.png", avatarTopBar);
         loadImage("/images/logo-tete-dragon.png", avatarSidebar);
         setActiveNav(btnAccueil);
-        // Le contenu remplit toujours la hauteur visible de la fenêtre
         mainScrollPane.viewportBoundsProperty().addListener((obs, o, bounds) ->
                 contentVBox.setMinHeight(bounds.getHeight())
         );
+        loadFeaturedGame();
+        loadGameCards();
+        loadFavoritePanel();
+    }
+
+    // ── Jeu aléatoire ─────────────────────────────────────────────────────
+
+    private void loadFeaturedGame() {
+        GameService service = new GameService(new GameRepositoryImpl());
+        List<Game> games = service.getAllGames();
+        if (games.isEmpty()) return;
+
+        currentDetailGame = games.get(new Random().nextInt(games.size()));
+        showInOverlay(currentDetailGame);
+        featuredTitle.setText(currentDetailGame.getTitle());
+        applyCover(currentDetailGame, featuredImage);
+    }
+
+    private void loadGameCards() {
+        GameService service = new GameService(new GameRepositoryImpl());
+        List<Game> all = service.getAllGames();
+        if (all.isEmpty()) return;
+
+        Random rnd = new Random();
+        List<Label>     labels  = List.of(gameCard1Title, gameCard2Title, gameCard3Title);
+        List<ImageView> images  = List.of(cardImage1, cardImage2, cardImage3);
+        cardGames.clear();
+
+        // Pool sans featured sauf si pas assez de jeux
+        java.util.List<Game> pool = new java.util.ArrayList<>(all);
+        if (pool.size() > 1 && currentDetailGame != null) pool.remove(currentDetailGame);
+
+        for (int i = 0; i < labels.size(); i++) {
+            // Réutiliser le pool cycliquement si moins de 3 jeux
+            Game g = pool.get(rnd.nextInt(pool.size()));
+            cardGames.add(g);
+            labels.get(i).setText(g.getTitle());
+            applyCover(g, images.get(i));
+        }
+    }
+
+    private void loadFavoritePanel() {
+        GameService service = new GameService(new GameRepositoryImpl());
+        List<Game> favs = service.getAllGames().stream()
+                .filter(g -> Boolean.TRUE.equals(g.getIsFavorite()))
+                .collect(Collectors.toList());
+
+        favoritesContent.getChildren().clear();
+        if (favs.isEmpty()) {
+            Label empty = new Label("Aucun jeu en favori");
+            empty.setStyle("-fx-text-fill: rgba(255,255,255,0.4); -fx-font-size: 12px;");
+            favoritesContent.getChildren().add(empty);
+        } else {
+            Game fav = favs.get(new Random().nextInt(favs.size()));
+            Label lbl = new Label("♥  " + fav.getTitle());
+            lbl.setStyle("-fx-text-fill: #ff6080; -fx-font-size: 13px;");
+            favoritesContent.getChildren().add(lbl);
+        }
+    }
+
+    // ── Handlers cartes jeux ──────────────────────────────────────────────
+
+    @FXML private void onGameCard1Click() { openDetailForCard(0); }
+    @FXML private void onGameCard2Click() { openDetailForCard(1); }
+    @FXML private void onGameCard3Click() { openDetailForCard(2); }
+
+    private void openDetailForCard(int index) {
+        if (index >= cardGames.size()) return;
+        currentDetailGame = cardGames.get(index);
+        showInOverlay(currentDetailGame);
+        overlay.setVisible(true);
+    }
+
+    private void showInOverlay(Game g) {
+        detailTitle.setText(g.getTitle());
+        detailDeveloper.setText(g.getDeveloper() != null ? g.getDeveloper() : "");
+        detailPublisher.setText(g.getPublisher() != null ? g.getPublisher() : "");
+        detailYear.setText(g.getReleaseYear() != null ? String.valueOf(g.getReleaseYear()) : "");
+        detailDescription.setText(g.getDescription() != null ? g.getDescription() : "");
+        boolean fav = Boolean.TRUE.equals(g.getIsFavorite());
+        btnFavorite.setText(fav ? "★" : "☆");
+        btnFavorite.setStyle(fav ? "-fx-text-fill: #f0c040;" : "-fx-text-fill: rgba(255,255,255,0.6);");
+    }
+
+    @FXML
+    private void onFavoritesClick() {
+        GameListController.filterFavorites = true;
+        onCollection();
+    }
+
+    private void applyCover(Game g, ImageView iv) {
+        if (iv == null) return;
+        String path = g.getCoverImagePath();
+        if (path == null || path.isBlank()) return;
+
+        // Racine projet = parent de target/classes
+        try {
+            java.io.File classesDir = new java.io.File(
+                getClass().getProtectionDomain().getCodeSource().getLocation().toURI()
+            );
+            java.io.File projectRoot = classesDir.getParentFile().getParentFile();
+            String[] roots = {
+                projectRoot + "/src/main/resources/",
+                projectRoot + "/target/classes/",
+                System.getProperty("user.dir") + "/src/main/resources/",
+                System.getProperty("user.dir") + "/"
+            };
+            for (String root : roots) {
+                java.io.File f = new java.io.File(root + path);
+                if (f.exists()) { iv.setImage(new Image(f.toURI().toString())); return; }
+            }
+        } catch (Exception ignored) {}
+
+        try (InputStream is = getClass().getResourceAsStream("/" + path)) {
+            if (is != null) iv.setImage(new Image(is));
+        } catch (Exception ignored) {}
     }
 
     // ── Chargement d'image ───────────────────────────────────────────────
@@ -70,9 +214,40 @@ public class MainController implements Initializable {
     // ── Navigation ───────────────────────────────────────────────────────
 
     @FXML private void onAccueil()    { setActiveNav(btnAccueil); }
-    @FXML private void onAjouter()    { setActiveNav(btnAjouter); }
-    @FXML private void onCollection() { setActiveNav(btnCollection); }
     @FXML private void onAPropos()    { setActiveNav(btnAPropos); }
+
+    @FXML
+    private void onAjouter() {
+        setActiveNav(btnAjouter);
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/addgame.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) btnAjouter.getScene().getWindow();
+            Scene scene = new Scene(root, stage.getScene().getWidth(), stage.getScene().getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource("/css/main.css").toExternalForm());
+            stage.setScene(scene);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void onCollection() {
+        setActiveNav(btnCollection);
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/gamelists.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) btnCollection.getScene().getWindow();
+            Scene scene = new Scene(root, stage.getScene().getWidth(), stage.getScene().getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource("/css/main.css").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource("/css/gamelists.css").toExternalForm());
+            stage.setScene(scene);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     private void setActiveNav(Button active) {
         List<Button> all = List.of(btnAccueil, btnAjouter, btnCollection, btnAPropos);
@@ -86,6 +261,7 @@ public class MainController implements Initializable {
 
     @FXML
     private void onFeaturedCardClick() {
+        if (currentDetailGame != null) showInOverlay(currentDetailGame);
         overlay.setVisible(true);
     }
 
@@ -94,35 +270,36 @@ public class MainController implements Initializable {
         overlay.setVisible(false);
     }
 
-    // ── Favoris ──────────────────────────────────────────────────────────
+    // ── Favori étoile ────────────────────────────────────────────────────
 
     @FXML
     private void onToggleFavorite() {
-        isFavorite = !isFavorite;
-        if (isFavorite) {
-            btnFavorite.setText("♥");
-            btnFavorite.getStyleClass().add("detail-heart-btn-active");
-            Label item = new Label("♥  Minecraft");
-            item.getStyleClass().add("favorite-item");
-            favoritesContent.getChildren().add(item);
-        } else {
-            btnFavorite.setText("♡");
-            btnFavorite.getStyleClass().remove("detail-heart-btn-active");
-            favoritesContent.getChildren().clear();
-        }
+        if (currentDetailGame == null) return;
+        boolean newVal = !Boolean.TRUE.equals(currentDetailGame.getIsFavorite());
+        currentDetailGame.setIsFavorite(newVal);
+        new GameService(new GameRepositoryImpl()).updateGame(currentDetailGame);
+        btnFavorite.setText(newVal ? "★" : "☆");
+        btnFavorite.setStyle(newVal
+                ? "-fx-text-fill: #f0c040;"
+                : "-fx-text-fill: rgba(255,255,255,0.6);");
+        loadFavoritePanel();
     }
 
-    // ── Modifier / Supprimer (à compléter) ───────────────────────────────
-
-    @FXML
-    private void onModify() {
-        // TODO : ouvrir le formulaire d'édition
-    }
+    // ── Supprimer ─────────────────────────────────────────────────────────
 
     @FXML
     private void onDelete() {
+        if (currentDetailGame == null) return;
+        new GameService(new GameRepositoryImpl()).deleteGame(currentDetailGame.getId());
         overlay.setVisible(false);
-=======
->>>>>>> 088baca100b1af8a71c667b6952a28860dfd91fb
+        currentDetailGame = null;
+        loadFeaturedGame();
+        loadGameCards();
+        loadFavoritePanel();
+    }
+
+    @FXML
+    private void onModify() {
+        // TODO
     }
 }

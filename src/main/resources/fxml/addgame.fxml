@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane
+        xmlns="http://javafx.com/javafx/21"
+        xmlns:fx="http://javafx.com/fxml/1"
+        fx:controller="com.gamevault.controller.AddGameController"
+        styleClass="root-pane">
+
+    <!-- ── Sidebar ────────────────────────────────────────────────────────── -->
+    <left>
+        <VBox styleClass="sidebar" prefWidth="220" minWidth="220">
+            <HBox alignment="CENTER_LEFT">
+                <padding><Insets top="20" right="16" bottom="16" left="16"/></padding>
+                <ImageView fx:id="logoImage" fitWidth="185" fitHeight="60"
+                           preserveRatio="true" smooth="true"/>
+            </HBox>
+            <VBox spacing="4">
+                <padding><Insets top="6" right="12" bottom="6" left="12"/></padding>
+                <Button fx:id="btnAccueil"    onAction="#onAccueil"
+                        text="&#x2302;   Accueil"       styleClass="nav-btn" maxWidth="Infinity"/>
+                <Button fx:id="btnAjouter"    onAction="#onAjouter"
+                        text="+   Ajouter un jeu"        styleClass="nav-btn, nav-btn-active" maxWidth="Infinity"/>
+                <Button fx:id="btnCollection" onAction="#onCollection"
+                        text="&#x2630;   Collection"    styleClass="nav-btn" maxWidth="Infinity"/>
+                <Button fx:id="btnAPropos"    onAction="#onAPropos"
+                        text="&#x24D8;   &#xC0; Propos" styleClass="nav-btn" maxWidth="Infinity"/>
+            </VBox>
+            <Region VBox.vgrow="ALWAYS"/>
+            <VBox alignment="CENTER" spacing="10">
+                <padding><Insets top="16" right="16" bottom="28" left="16"/></padding>
+                <StackPane styleClass="sidebar-avatar" prefWidth="90" prefHeight="90">
+                    <ImageView fx:id="avatarImage" fitWidth="60" fitHeight="60"
+                               preserveRatio="true" smooth="true"/>
+                </StackPane>
+                <Label text="Nom d'utilisateur" styleClass="username-label"/>
+            </VBox>
+        </VBox>
+    </left>
+
+    <!-- ── Zone droite ────────────────────────────────────────────────────── -->
+    <center>
+        <BorderPane>
+
+            <!-- Topbar -->
+            <top>
+                <HBox styleClass="topbar" alignment="CENTER_LEFT" spacing="16">
+                    <padding><Insets top="14" right="22" bottom="14" left="22"/></padding>
+                    <TextField fx:id="searchField" promptText="Recherche"
+                               styleClass="search-field" prefWidth="300"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <StackPane styleClass="topbar-avatar" prefWidth="58" prefHeight="58">
+                        <ImageView fx:id="avatarTopBar" fitWidth="42" fitHeight="42"
+                                   preserveRatio="true" smooth="true"/>
+                    </StackPane>
+                </HBox>
+            </top>
+
+            <!-- Formulaire -->
+            <center>
+                <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="main-scroll">
+                    <VBox spacing="0" style="-fx-padding: 30 40 30 40; -fx-background-color: #0a1628;">
+
+                        <!-- Ligne erreur/succès -->
+                        <Label fx:id="statusLabel" text="" wrapText="true"
+                               style="-fx-font-size: 13px; -fx-padding: 0 0 12 0;"/>
+
+                        <!-- Grille principale -->
+                        <HBox spacing="40">
+
+                            <!-- Colonne gauche -->
+                            <VBox spacing="16" HBox.hgrow="ALWAYS">
+
+                                <VBox spacing="6">
+                                    <Label text="Nom du jeu :" style="-fx-text-fill: white; -fx-font-size: 14px;"/>
+                                    <TextField fx:id="fieldTitle" promptText="nom"
+                                               styleClass="form-field"/>
+                                </VBox>
+
+                                <VBox spacing="6">
+                                    <Label text="Description :" style="-fx-text-fill: white; -fx-font-size: 14px;"/>
+                                    <TextArea fx:id="fieldDescription" promptText="description du jeu"
+                                              prefHeight="200" wrapText="true"
+                                              styleClass="form-field"/>
+                                </VBox>
+
+                                <VBox spacing="6">
+                                    <Label text="Image du jeu :" style="-fx-text-fill: white; -fx-font-size: 14px;"/>
+                                    <HBox spacing="10" alignment="CENTER_LEFT">
+                                        <TextField fx:id="fieldImagePath" promptText="aucun fichier sélectionné"
+                                                   styleClass="form-field" HBox.hgrow="ALWAYS"
+                                                   editable="false"/>
+                                        <Button text="Parcourir…" onAction="#onBrowseImage"
+                                                styleClass="detail-btn-edit"
+                                                style="-fx-padding: 8 16 8 16;"/>
+                                    </HBox>
+                                </VBox>
+
+                            </VBox>
+
+                            <!-- Colonne droite -->
+                            <VBox spacing="16" prefWidth="300" minWidth="260">
+
+                                <VBox spacing="6">
+                                    <Label text="Développeur :" style="-fx-text-fill: white; -fx-font-size: 14px;"/>
+                                    <TextField fx:id="fieldDeveloper" promptText="nom du développeur"
+                                               styleClass="form-field"/>
+                                </VBox>
+
+                                <VBox spacing="6">
+                                    <Label text="Éditeur :" style="-fx-text-fill: white; -fx-font-size: 14px;"/>
+                                    <TextField fx:id="fieldPublisher" promptText="nom de l'éditeur"
+                                               styleClass="form-field"/>
+                                </VBox>
+
+                                <VBox spacing="6">
+                                    <Label text="Année :" style="-fx-text-fill: white; -fx-font-size: 14px;"/>
+                                    <TextField fx:id="fieldYear" promptText="xxxx"
+                                               styleClass="form-field"/>
+                                </VBox>
+
+                                <VBox spacing="6">
+                                    <Label text="Note (0-10) :" style="-fx-text-fill: white; -fx-font-size: 14px;"/>
+                                    <TextField fx:id="fieldRating" promptText="ex: 8.5"
+                                               styleClass="form-field"/>
+                                </VBox>
+
+                                <VBox spacing="6">
+                                    <Label text="Plateformes :" style="-fx-text-fill: white; -fx-font-size: 14px;"/>
+                                    <ComboBox fx:id="comboPlatform" maxWidth="Infinity"
+                                              styleClass="form-combo"/>
+                                </VBox>
+
+                                <!-- Bouton Ajouter -->
+                                <HBox alignment="CENTER_RIGHT">
+                                    <padding><Insets top="10"/></padding>
+                                    <Button text="Ajouter" onAction="#onAjouter_jeu"
+                                            styleClass="detail-btn-edit"
+                                            style="-fx-padding: 10 30 10 30; -fx-font-size: 14px;"/>
+                                </HBox>
+
+                            </VBox>
+                        </HBox>
+                    </VBox>
+                </ScrollPane>
+            </center>
+
+        </BorderPane>
+    </center>
+
+</BorderPane>

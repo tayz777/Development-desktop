@@ -46,6 +46,9 @@ public class Game {
     @Column(nullable = false)
     private GameStatus status = GameStatus.TO_PLAY;
 
+    @Column(name = "isFavorite", columnDefinition = "boolean default false")
+    private Boolean isFavorite = false;
+
     // ── Constructeurs ─────────────────────────────────────────────────────
 
     public Game() {}
@@ -86,6 +89,9 @@ public class Game {
 
     public GameStatus getStatus()             { return status; }
     public void setStatus(GameStatus s)       { this.status = s; }
+
+    public Boolean getIsFavorite()            { return isFavorite; }
+    public void setIsFavorite(Boolean f)      { this.isFavorite = f; }
 
     @Override
     public String toString() {

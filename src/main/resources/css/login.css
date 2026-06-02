@@ -1,0 +1,44 @@
+/* =============================================================================
+   GameVault – Login
+   ============================================================================= */
+
+.login-container {
+    -fx-background-color: #0d1b3e;
+}
+
+#username_textarea {
+    -fx-background-color: #162040;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #6080b0;
+    -fx-background-radius: 8;
+    -fx-border-color: #2a4080;
+    -fx-border-radius: 8;
+    -fx-border-width: 1.5;
+    -fx-padding: 10 16 10 16;
+    -fx-font-size: 15px;
+}
+
+#username_textarea:focused {
+    -fx-border-color: #5a80d0;
+}
+
+#validate_button {
+    -fx-background-color: #1e3a8a;
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-border-color: #2a4080;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+    -fx-cursor: hand;
+    -fx-padding: 10 30 10 30;
+}
+
+#validate_button:hover {
+    -fx-background-color: #2a4a9a;
+}
+
+#validate_button:pressed {
+    -fx-background-color: #162040;
+}

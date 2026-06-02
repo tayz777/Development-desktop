@@ -6,21 +6,28 @@ import com.gamevault.service.GameService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class GameListController {
 
-    @FXML private TextField searchField;
+    @FXML private TextField  searchField;
     @FXML private TableView<Game> gameTableView;
 
     @FXML private TableColumn<Game, Void>    colCover;
@@ -28,41 +35,148 @@ public class GameListController {
     @FXML private TableColumn<Game, String>  colPlatform;
     @FXML private TableColumn<Game, Integer> colYear;
     @FXML private TableColumn<Game, Double>  colRating;
+    @FXML private TableColumn<Game, Void>    colFavorite;
 
-    @FXML private Button btnAccueil;
-    @FXML private Button btnAjouter;
-    @FXML private Button btnCollection;
-    @FXML private Button btnAPropos;
+    @FXML private Button    btnAccueil;
+    @FXML private Button    btnAjouter;
+    @FXML private Button    btnCollection;
+    @FXML private Button    btnAPropos;
+    @FXML private ImageView logoImage;
+    @FXML private ImageView avatarImage;
+    @FXML private ImageView avatarTopBar;
 
     private GameService gameService;
     private ObservableList<Game> allGames;
 
+    public static boolean filterFavorites = false;
+
     @FXML
     public void initialize() {
-        gameService = new GameService(new GameRepositoryImpl());
+        loadImage("/images/logo-dragon.png",      logoImage);
+        loadImage("/images/logo-tete-dragon.png", avatarTopBar);
+        loadImage("/images/logo-tete-dragon.png", avatarImage);
 
+        gameService = new GameService(new GameRepositoryImpl());
         gameTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
         setupColumns();
         styleTable();
         loadGames();
 
         searchField.textProperty().addListener((obs, o, newVal) -> filterGames(newVal));
+
+        if (filterFavorites) {
+            filterFavorites = false;
+            ObservableList<Game> favs = allGames.stream()
+                    .filter(g -> Boolean.TRUE.equals(g.getIsFavorite()))
+                    .collect(Collectors.toCollection(FXCollections::observableArrayList));
+            gameTableView.setItems(favs);
+        }
+    }
+
+    private javafx.scene.Node loadCover(Game g, ImageView iv, Region placeholder) {
+        String path = g.getCoverImagePath();
+        if (path != null && !path.isBlank()) {
+            try {
+                java.io.File classesDir = new java.io.File(
+                    getClass().getProtectionDomain().getCodeSource().getLocation().toURI()
+                );
+                java.io.File projectRoot = classesDir.getParentFile().getParentFile();
+                String[] roots = {
+                    projectRoot + "/src/main/resources/",
+                    projectRoot + "/target/classes/",
+                    System.getProperty("user.dir") + "/src/main/resources/",
+                    System.getProperty("user.dir") + "/"
+                };
+                for (String root : roots) {
+                    java.io.File f = new java.io.File(root + path);
+                    if (f.exists()) {
+                        iv.setImage(new javafx.scene.image.Image(f.toURI().toString()));
+                        return iv;
+                    }
+                }
+            } catch (Exception ignored) {}
+            try (InputStream is = getClass().getResourceAsStream("/" + path)) {
+                if (is != null) { iv.setImage(new javafx.scene.image.Image(is)); return iv; }
+            } catch (Exception ignored) {}
+        }
+        return placeholder;
+    }
+
+    private void loadImage(String path, ImageView target) {
+        if (target == null) return;
+        try (InputStream is = getClass().getResourceAsStream(path)) {
+            if (is != null) target.setImage(new Image(is));
+        } catch (Exception ignored) {}
+    }
+
+    @FXML private void onAccueil() {
+        navigateTo("/fxml/main.fxml");
+    }
+
+    @FXML private void onAjouter()    { /* TODO */ }
+    @FXML private void onCollection() { /* déjà ici */ }
+    @FXML private void onAPropos()    { /* TODO */ }
+
+    private void navigateTo(String fxml) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
+            Parent root = loader.load();
+            Stage stage = (Stage) btnAccueil.getScene().getWindow();
+            Scene scene = new Scene(root, stage.getScene().getWidth(), stage.getScene().getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource("/css/main.css").toExternalForm());
+            stage.setScene(scene);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void setupColumns() {
-        // Cover — placeholder coloré
+        // Cover — image ou placeholder
         colCover.setCellFactory(col -> new TableCell<>() {
-            private final Region box = new Region();
+            private final ImageView iv          = new ImageView();
+            private final Region    placeholder = new Region();
             {
-                box.setPrefSize(48, 64);
-                box.setMinSize(48, 64);
-                box.setMaxSize(48, 64);
-                box.setStyle("-fx-background-color: #2a4080; -fx-background-radius: 6;");
+                iv.setFitWidth(48); iv.setFitHeight(64);
+                iv.setPreserveRatio(true); iv.setSmooth(true);
+                placeholder.setPrefSize(48, 64);
+                placeholder.setMinSize(48, 64);
+                placeholder.setMaxSize(48, 64);
+                placeholder.setStyle("-fx-background-color: #2a4080; -fx-background-radius: 6;");
             }
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
-                setGraphic(empty ? null : box);
+                if (empty) { setGraphic(null); return; }
+                Game g = getTableView().getItems().get(getIndex());
+                setGraphic(loadCover(g, iv, placeholder));
+                setAlignment(Pos.CENTER);
+            }
+        });
+
+        // Favori — étoile cliquable
+        colFavorite.setCellFactory(col -> new TableCell<>() {
+            private final Button star = new Button();
+            {
+                star.setStyle("-fx-background-color: transparent; -fx-border-color: transparent; -fx-font-size: 18px; -fx-cursor: hand; -fx-padding: 0;");
+                star.setOnAction(e -> {
+                    Game g = getTableView().getItems().get(getIndex());
+                    boolean newVal = !Boolean.TRUE.equals(g.getIsFavorite());
+                    g.setIsFavorite(newVal);
+                    gameService.updateGame(g);
+                    star.setText(newVal ? "★" : "☆");
+                    star.setStyle("-fx-background-color: transparent; -fx-border-color: transparent; -fx-font-size: 18px; -fx-cursor: hand; -fx-padding: 0; -fx-text-fill: " + (newVal ? "#f0c040;" : "rgba(255,255,255,0.4);"));
+                });
+            }
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) { setGraphic(null); return; }
+                Game g = getTableView().getItems().get(getIndex());
+                boolean fav = Boolean.TRUE.equals(g.getIsFavorite());
+                star.setText(fav ? "★" : "☆");
+                star.setStyle("-fx-background-color: transparent; -fx-border-color: transparent; -fx-font-size: 18px; -fx-cursor: hand; -fx-padding: 0; -fx-text-fill: " + (fav ? "#f0c040;" : "rgba(255,255,255,0.4);"));
+                setGraphic(star);
                 setAlignment(Pos.CENTER);
             }
         });

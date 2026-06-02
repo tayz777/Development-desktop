@@ -100,45 +100,59 @@
                     <VBox fx:id="contentVBox" spacing="16">
                         <padding><Insets top="20" right="24" bottom="24" left="24"/></padding>
 
-                        <!-- Carte Minecraft mise en avant -->
+                        <!-- Carte jeu aléatoire mise en avant -->
                         <StackPane styleClass="featured-card" prefHeight="200" minHeight="160"
                                    VBox.vgrow="SOMETIMES"
                                    onMouseClicked="#onFeaturedCardClick">
+                            <ImageView fx:id="featuredImage" fitWidth="9999" fitHeight="200"
+                                       preserveRatio="false" smooth="true" opacity="0.55"
+                                       StackPane.alignment="CENTER"/>
                             <Region styleClass="featured-cover-full"/>
                             <VBox alignment="BOTTOM_LEFT" StackPane.alignment="BOTTOM_LEFT">
                                 <padding><Insets bottom="18" left="22"/></padding>
-                                <Label text="Minecraft" styleClass="featured-title"/>
+                                <Label fx:id="featuredTitle" text="" styleClass="featured-title"/>
                             </VBox>
                         </StackPane>
 
-                        <!-- 3 cartes jeux -->
+                        <!-- 3 cartes jeux aléatoires -->
                         <HBox spacing="14" VBox.vgrow="SOMETIMES">
-                            <VBox styleClass="game-card" HBox.hgrow="ALWAYS"
-                                  prefHeight="135" minHeight="100" alignment="BOTTOM_LEFT">
-                                <padding><Insets bottom="12" left="14"/></padding>
-                                <Label text="Nom de jeu" styleClass="game-card-title"/>
-                            </VBox>
-                            <VBox styleClass="game-card" HBox.hgrow="ALWAYS"
-                                  prefHeight="135" minHeight="100" alignment="BOTTOM_LEFT">
-                                <padding><Insets bottom="12" left="14"/></padding>
-                                <Label text="Nom de jeu" styleClass="game-card-title"/>
-                            </VBox>
-                            <VBox styleClass="game-card" HBox.hgrow="ALWAYS"
-                                  prefHeight="135" minHeight="100" alignment="BOTTOM_LEFT">
-                                <padding><Insets bottom="12" left="14"/></padding>
-                                <Label text="Nom de jeu" styleClass="game-card-title"/>
-                            </VBox>
+                            <StackPane fx:id="gameCard1" styleClass="game-card"
+                                       HBox.hgrow="ALWAYS" prefWidth="0" prefHeight="135" minHeight="135"
+                                       onMouseClicked="#onGameCard1Click">
+                                <ImageView fx:id="cardImage1" fitWidth="9999" fitHeight="135"
+                                           preserveRatio="false" smooth="true" opacity="0.55"/>
+                                <VBox alignment="BOTTOM_LEFT" StackPane.alignment="BOTTOM_LEFT">
+                                    <padding><Insets bottom="12" left="14"/></padding>
+                                    <Label fx:id="gameCard1Title" text="" styleClass="game-card-title"/>
+                                </VBox>
+                            </StackPane>
+                            <StackPane fx:id="gameCard2" styleClass="game-card"
+                                       HBox.hgrow="ALWAYS" prefWidth="0" prefHeight="135" minHeight="135"
+                                       onMouseClicked="#onGameCard2Click">
+                                <ImageView fx:id="cardImage2" fitWidth="9999" fitHeight="135"
+                                           preserveRatio="false" smooth="true" opacity="0.55"/>
+                                <VBox alignment="BOTTOM_LEFT" StackPane.alignment="BOTTOM_LEFT">
+                                    <padding><Insets bottom="12" left="14"/></padding>
+                                    <Label fx:id="gameCard2Title" text="" styleClass="game-card-title"/>
+                                </VBox>
+                            </StackPane>
+                            <StackPane fx:id="gameCard3" styleClass="game-card"
+                                       HBox.hgrow="ALWAYS" prefWidth="0" prefHeight="135" minHeight="135"
+                                       onMouseClicked="#onGameCard3Click">
+                                <ImageView fx:id="cardImage3" fitWidth="9999" fitHeight="135"
+                                           preserveRatio="false" smooth="true" opacity="0.55"/>
+                                <VBox alignment="BOTTOM_LEFT" StackPane.alignment="BOTTOM_LEFT">
+                                    <padding><Insets bottom="12" left="14"/></padding>
+                                    <Label fx:id="gameCard3Title" text="" styleClass="game-card-title"/>
+                                </VBox>
+                            </StackPane>
                         </HBox>
 
-                        <!-- Panneaux bas : catégorie + favoris (remplissent l'espace restant) -->
+                        <!-- Panneau Jeux favoris (pleine largeur) -->
                         <HBox spacing="14" VBox.vgrow="ALWAYS" minHeight="120">
-                            <VBox styleClass="game-card" prefWidth="220" minWidth="180"
-                                  maxHeight="Infinity" alignment="TOP_LEFT">
-                                <padding><Insets top="14" left="16"/></padding>
-                                <Label text="Nom catégorie" styleClass="panel-title"/>
-                            </VBox>
                             <VBox styleClass="game-card" HBox.hgrow="ALWAYS"
-                                  maxHeight="Infinity" alignment="TOP_LEFT">
+                                  maxHeight="Infinity" alignment="TOP_LEFT"
+                                  onMouseClicked="#onFavoritesClick" style="-fx-cursor: hand;">
                                 <padding><Insets top="14" left="16"/></padding>
                                 <Label text="Jeux favoris" styleClass="panel-title"/>
                                 <VBox fx:id="favoritesContent" spacing="6">
@@ -185,17 +199,17 @@
 
                         <!-- Tags -->
                         <HBox spacing="8" alignment="CENTER_LEFT">
-                            <Label text="Mojang" styleClass="detail-tag"/>
-                            <Label text="Notch"  styleClass="detail-tag"/>
-                            <Label text="2009"   styleClass="detail-tag"/>
+                            <Label fx:id="detailDeveloper" text=""    styleClass="detail-tag"/>
+                            <Label fx:id="detailPublisher" text=""    styleClass="detail-tag"/>
+                            <Label fx:id="detailYear"      text=""    styleClass="detail-tag"/>
                         </HBox>
 
                         <!-- Titre -->
-                        <Label text="Minecraft" styleClass="detail-game-title"/>
+                        <Label fx:id="detailTitle" text="" styleClass="detail-game-title"/>
 
                         <!-- Description -->
-                        <Label styleClass="detail-description" wrapText="true" maxWidth="460"
-                               text="Lorem ipsum dolor sit amet consectetur. Faucibus condimentum consectetur morbi tincidunt egestas. Ultrices velit non amet consequat auctor porta sagittis sed cras. Facilisis faucibus sit pellentesque pellentesque proin aliquam tempor velit sit."/>
+                        <Label fx:id="detailDescription" styleClass="detail-description"
+                               wrapText="true" maxWidth="460" text=""/>
 
                         <!-- Icônes plateformes -->
                         <HBox spacing="10" alignment="CENTER_LEFT">
@@ -206,7 +220,7 @@
 
                         <!-- Boutons action -->
                         <HBox spacing="10" alignment="CENTER_RIGHT">
-                            <Button fx:id="btnFavorite" text="&#x2661;"
+                            <Button fx:id="btnFavorite" text="☆"
                                     onAction="#onToggleFavorite"
                                     styleClass="detail-heart-btn"/>
                             <Region HBox.hgrow="ALWAYS"/>

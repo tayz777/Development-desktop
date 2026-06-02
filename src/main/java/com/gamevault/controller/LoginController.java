@@ -43,10 +43,9 @@ public class LoginController {
             // 3. Créer la nouvelle scène avec le menu principal
             Scene mainScene = new Scene(mainRoot, stage.getScene().getWidth(), stage.getScene().getHeight());
 
-            // Réappliquer le fichier CSS sur la nouvelle scène
-            if (getClass().getResource("/css/style.css") != null) {
-                mainScene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
-            }
+            mainScene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
+            mainScene.getStylesheets().add(getClass().getResource("/css/main.css").toExternalForm());
+            mainScene.getStylesheets().add(getClass().getResource("/css/gamelists.css").toExternalForm());
 
             // 4. Changer la scène et mettre à jour le titre
             stage.setTitle("GameVault - " + username);

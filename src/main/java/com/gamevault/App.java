@@ -38,9 +38,8 @@ public class App extends Application {
         int height = Integer.parseInt(config.getProperty("app.window.height", "750"));
 
         Scene scene = new Scene(root, width, height);
-        scene.getStylesheets().add(
-                getClass().getResource("/css/style.css").toExternalForm()
-        );
+        scene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/css/login.css").toExternalForm());
 
         primaryStage.setTitle(config.getProperty("app.name", "GameVault"));
         primaryStage.setMinWidth(820);
@@ -79,7 +78,7 @@ public class App extends Application {
                 gameTest.setPlatform(Set.of(Platform.PC, Platform.XBOX_ONE, Platform.PLAYSTATION_4));
                 gameTest.setPersonalRating(9.1);
                 gameTest.setDescription("Un excellent chef-d'œuvre.");
-                gameTest.setCoverImagePath("images/elden_ring.jpg");
+                gameTest.setCoverImagePath("images/game-images/elden_ring.jpg");
 
                 session.persist(gameTest);
                 session.getTransaction().commit();
