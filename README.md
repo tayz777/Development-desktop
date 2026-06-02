@@ -12,26 +12,50 @@
 | SQLite      | 3.45.3  |
 | Maven       | 3.9+    |
 
+## Fonctionnalités
+
+- Ajout, modification et suppression de jeux
+- Collection avec couverture image, note personnelle, plateforme, année
+- Système de favoris (étoile) avec affichage dédié
+- Recherche en temps réel avec suggestions
+- Page d'accueil avec jeux aléatoires depuis la base de données
+- Popup de détail avec informations complètes
+- Navigation multi-pages (Accueil, Collection, Ajouter, À Propos)
+- Persistance SQLite via Hibernate
+
 ## Prérequis
 
-- **JDK 21** ou supérieur ([Télécharger OpenJDK](https://adoptium.net/))
-- **Maven 3.9+** ([Télécharger Maven](https://maven.apache.org/download.cgi))
+- **JDK 21+** (le projet inclut un wrapper Maven, pas besoin de Maven installé)
 
-## Lancer l'application
+## Lancer en développement
 
 ```powershell
-# Compiler
-.\mvnw compile
-
-# Lancer
-.\mvnw javafx:run
-
-# Tests
-.\mvnw test
+# Windows
+$env:JAVA_HOME = "C:\Users\[users]\.jdks\openjdk-25.0.2"
+.\mvnw.cmd javafx:run
 ```
 
-> **Note** : `mvn` doit être dans ton PATH ou utiliser le wrapper `.\mvnw` fourni.  
-> Sur Linux/macOS : `./mvnw javafx:run`
+```bash
+# Linux / macOS
+./mvnw javafx:run
+```
+
+## Générer le JAR exécutable
+
+```powershell
+$env:JAVA_HOME = "C:\Users\[users]\.jdks\openjdk-25.0.2"
+.\mvnw.cmd package
+```
+
+Produit : `target/gamevault-1.0-SNAPSHOT-shaded.jar`
+
+Lancer le JAR :
+
+```powershell
+"C:\Users\[users]\.jdks\openjdk-25.0.2\bin\java.exe" -jar target\gamevault-1.0-SNAPSHOT-shaded.jar
+```
+
+Ou double-cliquer sur **`launch.bat`** à la racine du projet.
 
 ## Structure du projet
 
@@ -39,28 +63,43 @@
 src/
 ├── main/
 │   ├── java/com/gamevault/
-│   │   ├── App.java                  # Application JavaFX
-│   │   ├── Launcher.java             # Point d'entrée (compatibilité JAR)
+│   │   ├── App.java
+│   │   ├── Launcher.java
 │   │   ├── controller/
-│   │   │   └── MainController.java   # Contrôleur FXML principal
+│   │   │   ├── MainController.java
+│   │   │   ├── GameListController.java
+│   │   │   ├── AddGameController.java
+│   │   │   ├── DetailController.java
+│   │   │   └── LoginController.java
 │   │   ├── model/
-│   │   │   ├── Game.java             # Entité JPA
-│   │   │   ├── Platform.java         # Enum plateformes
-│   │   │   └── GameStatus.java       # Enum statuts
+│   │   │   ├── Game.java
+│   │   │   ├── Platform.java
+│   │   │   └── GameStatus.java
 │   │   ├── repository/
-│   │   │   ├── GameRepository.java       # Interface
-│   │   │   └── GameRepositoryImpl.java   # Implémentation Hibernate
+│   │   │   ├── GameRepository.java
+│   │   │   └── GameRepositoryImpl.java
 │   │   ├── service/
-│   │   │   └── GameService.java      # Logique métier
+│   │   │   └── GameService.java
 │   │   └── util/
-│   │       └── HibernateUtil.java    # SessionFactory singleton
+│   │       ├── HibernateUtil.java
+│   │       ├── UserSession.java
+│   │       └── SearchHelper.java
 │   └── resources/
 │       ├── fxml/
-│       │   └── main.fxml             # Vue principale
+│       │   ├── login.fxml
+│       │   ├── main.fxml
+│       │   ├── gamelists.fxml
+│       │   ├── addgame.fxml
+│       │   └── detail.fxml
 │       ├── css/
-│       │   └── style.css             # Feuille de style globale
-│       ├── hibernate.cfg.xml         # Configuration Hibernate / SQLite
-│       └── config.properties         # Paramètres externalisés
+│       │   ├── style.css
+│       │   ├── main.css
+│       │   ├── login.css
+│       │   └── gamelists.css
+│       ├── images/
+│       │   └── game-images/
+│       ├── hibernate.cfg.xml
+│       └── config.properties
 └── test/
     └── java/com/gamevault/
         └── AppTest.java
@@ -68,20 +107,17 @@ src/
 
 ## Maquette Figma
 
-> 🔗 [Lien à ajouter](https://www.figma.com/design/OdegrN42JWzY95VcM9TTpL/Sans-titre?node-id=0-1&t=ROyZuE2jsLntp2Zv-1)
-
-## Documentation UX/UI
-
-> 📄 Document à ajouter
+> 🔗 [Lien Figma](https://www.figma.com/design/OdegrN42JWzY95VcM9TTpL/Sans-titre?node-id=0-1&t=ROyZuE2jsLntp2Zv-1)
 
 ## Roadmap
 
 - [x] Initialisation Maven (Java 21, JavaFX, Hibernate, SQLite)
 - [x] Architecture en couches (model / repository / service / controller)
-- [x] Configuration Hibernate + SQLite prête
-- [x] Paramètres externalisés (`config.properties`)
-- [ ] Interface principale (FXML + CSS)
-- [ ] CRUD complet des jeux
-- [ ] Recherche, filtres et tri
-- [ ] Gestion des jaquettes
-- [ ] Export de la collection
+- [x] Configuration Hibernate + SQLite
+- [x] Interface multi-pages (Login, Accueil, Collection, Ajout, Détail)
+- [x] CRUD complet des jeux
+- [x] Recherche avec suggestions en temps réel
+- [x] Gestion des jaquettes (image cover)
+- [x] Système de favoris
+- [x] Popup de détail avec modification/suppression
+- [x] JAR exécutable via maven-shade-plugin
