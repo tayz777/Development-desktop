@@ -2,6 +2,9 @@ package com.gamevault.model;
 
 import jakarta.persistence.*;
 
+import java.util.Set;
+import jakarta.persistence.Convert;
+
 /**
  * Entité représentant un jeu vidéo dans la collection.
  *
@@ -26,9 +29,9 @@ public class Game {
     @Column(name = "release_year")
     private Integer releaseYear;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Platform platform;
+    @Convert(converter = com.gamevault.util.PlatformListConverter.class)
+    @Column(name = "platform", nullable = false, columnDefinition = "TEXT")
+    private Set<Platform> platform;
 
     @Column(name = "personal_rating")
     private Double personalRating;
@@ -47,7 +50,7 @@ public class Game {
 
     public Game() {}
 
-    public Game(String title, Platform platform) {
+    public Game(String title, Set<Platform> platform) {
         this.title    = title;
         this.platform = platform;
     }
@@ -69,8 +72,8 @@ public class Game {
     public Integer getReleaseYear()           { return releaseYear; }
     public void setReleaseYear(Integer y)     { this.releaseYear = y; }
 
-    public Platform getPlatform()             { return platform; }
-    public void setPlatform(Platform p)       { this.platform = p; }
+    public Set<Platform> getPlatform()        { return platform; }
+    public void setPlatform(Set<Platform> p)  { this.platform = p; }
 
     public Double getPersonalRating()         { return personalRating; }
     public void setPersonalRating(Double r)   { this.personalRating = r; }

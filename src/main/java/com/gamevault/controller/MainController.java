@@ -1,6 +1,5 @@
 package com.gamevault.controller;
 
-import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 
 import java.net.URL;
@@ -16,6 +15,5 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // Initialisation du contrôleur – à compléter
     }
 }
