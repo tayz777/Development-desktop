@@ -85,6 +85,8 @@ public class MainController implements Initializable {
         setActiveNav(btnAccueil);
         if (usernameLabel != null)
             usernameLabel.setText(com.gamevault.util.UserSession.getUsername());
+        com.gamevault.util.SearchHelper.attach(searchField,
+            () -> { loadFeaturedGame(); loadGameCards(); loadFavoritePanel(); });
         mainScrollPane.viewportBoundsProperty().addListener((obs, o, bounds) ->
                 contentVBox.setMinHeight(bounds.getHeight())
         );
@@ -160,8 +162,10 @@ public class MainController implements Initializable {
     private void openDetailForCard(int index) {
         if (index >= cardGames.size()) return;
         currentDetailGame = cardGames.get(index);
-        showInOverlay(currentDetailGame);
-        overlay.setVisible(true);
+        Stage stage = (Stage) featuredCard.getScene().getWindow();
+        DetailController.open(currentDetailGame, stage, () -> {
+            loadFeaturedGame(); loadGameCards(); loadFavoritePanel();
+        });
     }
 
     private void showInOverlay(Game g) {
@@ -249,7 +253,37 @@ public class MainController implements Initializable {
     // ── Navigation ───────────────────────────────────────────────────────
 
     @FXML private void onAccueil()    { setActiveNav(btnAccueil); }
-    @FXML private void onAPropos()    { setActiveNav(btnAPropos); }
+
+    @FXML private void onAPropos() {
+        setActiveNav(btnAPropos);
+        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(
+            javafx.scene.control.Alert.AlertType.NONE
+        );
+        alert.setTitle("À Propos");
+        alert.setHeaderText("DRAGO Games");
+        javafx.scene.layout.VBox content = new javafx.scene.layout.VBox(12);
+        content.setPadding(new javafx.geometry.Insets(16));
+        content.getChildren().addAll(
+            aboutLabel("Gestionnaire de collection de jeux vidéo", true),
+            aboutLabel("Version 1.0", false),
+            aboutLabel("Développé avec JavaFX 21 + Hibernate + SQLite", false),
+            aboutLabel("© 2026 DragoGames", false)
+        );
+        alert.getDialogPane().setContent(content);
+        alert.getDialogPane().getButtonTypes().add(javafx.scene.control.ButtonType.CLOSE);
+        alert.getDialogPane().setStyle("-fx-background-color: #0d1f45; -fx-border-color: #1e3870; -fx-border-width: 1;");
+        alert.initOwner(btnAPropos.getScene().getWindow());
+        alert.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+        alert.showAndWait();
+    }
+
+    private javafx.scene.control.Label aboutLabel(String text, boolean bold) {
+        javafx.scene.control.Label lbl = new javafx.scene.control.Label(text);
+        lbl.setStyle("-fx-text-fill: " + (bold ? "white" : "#a0b4d6") +
+                     "; -fx-font-size: " + (bold ? "13" : "12") + "px;" +
+                     (bold ? " -fx-font-weight: bold;" : ""));
+        return lbl;
+    }
 
     @FXML
     private void onAjouter() {
@@ -296,8 +330,11 @@ public class MainController implements Initializable {
 
     @FXML
     private void onFeaturedCardClick() {
-        if (currentDetailGame != null) showInOverlay(currentDetailGame);
-        overlay.setVisible(true);
+        if (currentDetailGame == null) return;
+        Stage stage = (Stage) featuredCard.getScene().getWindow();
+        DetailController.open(currentDetailGame, stage, () -> {
+            loadFeaturedGame(); loadGameCards(); loadFavoritePanel();
+        });
     }
 
     @FXML

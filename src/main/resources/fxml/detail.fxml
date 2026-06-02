@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+
+<StackPane xmlns="http://javafx.com/javafx/21"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.gamevault.controller.DetailController"
+           prefWidth="520" prefHeight="340"
+           styleClass="detail-card">
+
+    <!-- Image de fond -->
+    <ImageView fx:id="coverImage" fitWidth="520" fitHeight="340"
+               preserveRatio="false" smooth="true"/>
+
+    <!-- Dégradé -->
+    <Region styleClass="detail-gradient" StackPane.alignment="BOTTOM_CENTER"
+            prefHeight="220" maxWidth="Infinity"/>
+
+    <!-- Contenu -->
+    <VBox StackPane.alignment="TOP_LEFT" maxWidth="Infinity" maxHeight="Infinity">
+
+        <!-- Bouton fermer -->
+        <HBox>
+            <padding><Insets top="10" left="10"/></padding>
+            <Button text="✕" onAction="#onClose" styleClass="detail-close-btn"/>
+        </HBox>
+
+        <Region VBox.vgrow="ALWAYS"/>
+
+        <!-- Infos bas -->
+        <VBox spacing="7">
+            <padding><Insets bottom="16" right="20" left="20"/></padding>
+
+            <!-- Tags -->
+            <HBox spacing="8" alignment="CENTER_LEFT">
+                <Label fx:id="labelDeveloper" text="" styleClass="detail-tag"/>
+                <Label fx:id="labelPublisher" text="" styleClass="detail-tag"/>
+                <Label fx:id="labelYear"      text="" styleClass="detail-tag"/>
+            </HBox>
+
+            <!-- Titre -->
+            <Label fx:id="labelTitle" text="" styleClass="detail-game-title"
+                   style="-fx-font-size: 22px;"/>
+
+            <!-- Description -->
+            <Label fx:id="labelDescription" styleClass="detail-description"
+                   wrapText="true" maxWidth="420" maxHeight="52" text=""/>
+
+            <!-- Boutons -->
+            <HBox spacing="10" alignment="CENTER_RIGHT">
+                <Button fx:id="btnFavorite" text="☆"
+                        onAction="#onToggleFavorite"
+                        styleClass="detail-heart-btn"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="Modifier"  onAction="#onModify"  styleClass="detail-btn-edit"/>
+                <Button text="Supprimer" onAction="#onDelete"  styleClass="detail-btn-delete"/>
+            </HBox>
+
+        </VBox>
+    </VBox>
+
+</StackPane>

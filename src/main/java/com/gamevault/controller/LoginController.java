@@ -8,10 +8,22 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class LoginController {
+
+    @FXML private ImageView logoImage;
+
+    @FXML
+    public void initialize() {
+        try (InputStream is = getClass().getResourceAsStream("/images/logo-dragon.png")) {
+            if (is != null) logoImage.setImage(new Image(is));
+        } catch (Exception ignored) {}
+    }
 
     @FXML
     private TextField username_textarea;

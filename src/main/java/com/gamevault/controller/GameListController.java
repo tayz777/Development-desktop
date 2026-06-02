@@ -44,6 +44,7 @@ public class GameListController {
     @FXML private ImageView logoImage;
     @FXML private ImageView avatarImage;
     @FXML private ImageView avatarTopBar;
+    @FXML private Label     usernameLabel;
 
     private GameService gameService;
     private ObservableList<Game> allGames;
@@ -55,6 +56,8 @@ public class GameListController {
         loadImage("/images/logo-dragon.png",      logoImage);
         loadImage("/images/logo-tete-dragon.png", avatarTopBar);
         loadImage("/images/logo-tete-dragon.png", avatarImage);
+        if (usernameLabel != null)
+            usernameLabel.setText(com.gamevault.util.UserSession.getUsername());
 
         gameService = new GameService(new GameRepositoryImpl());
         gameTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
@@ -63,6 +66,21 @@ public class GameListController {
         loadGames();
 
         searchField.textProperty().addListener((obs, o, newVal) -> filterGames(newVal));
+        com.gamevault.util.SearchHelper.attach(searchField, this::loadGames);
+
+        gameTableView.setRowFactory(tv -> {
+            javafx.scene.control.TableRow<Game> row = new javafx.scene.control.TableRow<>();
+            row.setOnMouseClicked(e -> {
+                if (e.getClickCount() == 1 && !row.isEmpty()) {
+                    Game g = row.getItem();
+                    javafx.stage.Stage stage = (javafx.stage.Stage) gameTableView.getScene().getWindow();
+                    DetailController.open(g, stage, () -> {
+                        loadGames();
+                    });
+                }
+            });
+            return row;
+        });
 
         if (filterFavorites) {
             filterFavorites = false;
@@ -106,14 +124,20 @@ public class GameListController {
     }
 
     @FXML private void onAccueil() {
-        navigateTo("/fxml/main.fxml");
+        navigateTo("/fxml/main.fxml", false);
     }
 
-    @FXML private void onAjouter()    { /* TODO */ }
-    @FXML private void onCollection() { /* déjà ici */ }
-    @FXML private void onAPropos()    { /* TODO */ }
+    @FXML private void onAjouter() {
+        navigateTo("/fxml/addgame.fxml", false);
+    }
 
-    private void navigateTo(String fxml) {
+    @FXML private void onCollection() { /* déjà ici */ }
+
+    @FXML private void onAPropos() {
+        showAboutPopup();
+    }
+
+    private void navigateTo(String fxml, boolean withGamelists) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
             Parent root = loader.load();
@@ -121,10 +145,54 @@ public class GameListController {
             Scene scene = new Scene(root, stage.getScene().getWidth(), stage.getScene().getHeight());
             scene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
             scene.getStylesheets().add(getClass().getResource("/css/main.css").toExternalForm());
+            if (withGamelists)
+                scene.getStylesheets().add(getClass().getResource("/css/gamelists.css").toExternalForm());
             stage.setScene(scene);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void showAboutPopup() {
+        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(
+            javafx.scene.control.Alert.AlertType.NONE
+        );
+        alert.setTitle("À Propos");
+        alert.setHeaderText("DRAGO Games");
+
+        javafx.scene.layout.VBox content = new javafx.scene.layout.VBox(12);
+        content.setPadding(new javafx.geometry.Insets(16));
+        content.getChildren().addAll(
+            styledLabel("Gestionnaire de collection de jeux vidéo", true),
+            styledLabel("Version 1.0", false),
+            styledLabel("Développé avec JavaFX 21 + Hibernate + SQLite", false),
+            styledLabel("© 2026 DragoGames", false)
+        );
+
+        alert.getDialogPane().setContent(content);
+        alert.getDialogPane().getButtonTypes().add(javafx.scene.control.ButtonType.CLOSE);
+        alert.getDialogPane().setStyle(
+            "-fx-background-color: #0d1f45; -fx-border-color: #1e3870; -fx-border-width: 1;"
+        );
+        alert.getDialogPane().lookup(".header-panel").setStyle(
+            "-fx-background-color: #0d1f45;"
+        );
+        // Style header text
+        javafx.scene.control.Label header = (javafx.scene.control.Label)
+            alert.getDialogPane().lookup(".header-panel .label");
+        if (header != null) header.setStyle("-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;");
+
+        alert.initOwner(btnAccueil.getScene().getWindow());
+        alert.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+        alert.showAndWait();
+    }
+
+    private javafx.scene.control.Label styledLabel(String text, boolean bold) {
+        javafx.scene.control.Label lbl = new javafx.scene.control.Label(text);
+        lbl.setStyle("-fx-text-fill: " + (bold ? "white" : "#a0b4d6") +
+                     "; -fx-font-size: " + (bold ? "13" : "12") + "px;" +
+                     (bold ? " -fx-font-weight: bold;" : ""));
+        return lbl;
     }
 
     private void setupColumns() {

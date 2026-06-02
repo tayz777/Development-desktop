@@ -80,6 +80,8 @@
 }
 
 .search-field:focused {
+    -fx-background-color: #0d1f45;
+    -fx-text-fill: white;
     -fx-border-color: #5b3fd4;
 }
 

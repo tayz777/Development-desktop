@@ -72,25 +72,7 @@
     -fx-max-height: 58;
 }
 
-/* =============================================================================
-   BARRE DE RECHERCHE
-   ============================================================================= */
-.search-field {
-    -fx-background-color: #e8eaf0;
-    -fx-background-radius: 22;
-    -fx-border-color: #6b8fd4;
-    -fx-border-width: 1.5;
-    -fx-border-radius: 22;
-    -fx-padding: 8 18 8 18;
-    -fx-font-size: 13px;
-    -fx-prompt-text-fill: #7a84a0;
-    -fx-text-fill: #1a2a4a;
-}
-.search-field:focused {
-    -fx-background-color: #f0f2f8;
-    -fx-border-color: #4a7ae0;
-    -fx-border-width: 2;
-}
+/* search-field défini dans main.css */
 
 /* =============================================================================
    ZONE DE DÉFILEMENT

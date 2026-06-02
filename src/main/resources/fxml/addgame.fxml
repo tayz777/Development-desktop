@@ -37,7 +37,7 @@
                     <ImageView fx:id="avatarImage" fitWidth="60" fitHeight="60"
                                preserveRatio="true" smooth="true"/>
                 </StackPane>
-                <Label text="Nom d'utilisateur" styleClass="username-label"/>
+                <Label fx:id="usernameLabel" text="Nom d'utilisateur" styleClass="username-label"/>
             </VBox>
         </VBox>
     </left>

@@ -2,38 +2,37 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1"
+<VBox prefHeight="720.0" prefWidth="1280.0"
+      xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.gamevault.controller.LoginController">
-    <children>
-        <StackPane VBox.vgrow="ALWAYS" styleClass="login-container">
-            <children>
-                <VBox alignment="CENTER" spacing="40.0" maxWidth="363.0" fillWidth="false">
-                    <children>
-                        <Circle id="logo" fill="DODGERBLUE" radius="76.0" stroke="BLACK" strokeType="INSIDE" />
 
-                        <TextField id="username_textarea" fx:id="username_textarea"
-                                   maxHeight="70.0" prefHeight="40.0" prefWidth="363.0"
-                                   promptText="Nom d'utilisateur">
-                            <font>
-                                <Font size="18.0" />
-                            </font>
-                        </TextField>
+    <StackPane VBox.vgrow="ALWAYS" styleClass="login-container">
+        <VBox alignment="CENTER" spacing="36" maxWidth="420" fillWidth="false">
 
-                        <Button id="validate_button" fx:id="validate_button"
-                                onAction="#onLoginClick" mnemonicParsing="false"
-                                prefHeight="40.0" prefWidth="162.0" text="Valider">
-                            <font>
-                                <Font size="18.0" />
-                            </font>
-                        </Button>
-                    </children>
-                </VBox>
-            </children>
-        </StackPane>
-    </children>
+            <!-- Logo -->
+            <ImageView fx:id="logoImage" fitWidth="320" fitHeight="120"
+                       preserveRatio="true" smooth="true"/>
+
+            <!-- Champ utilisateur -->
+            <TextField id="username_textarea" fx:id="username_textarea"
+                       maxHeight="70" prefHeight="48" prefWidth="420"
+                       promptText="Nom d'utilisateur">
+                <font><Font size="16"/></font>
+            </TextField>
+
+            <!-- Bouton valider -->
+            <Button id="validate_button" fx:id="validate_button"
+                    onAction="#onLoginClick" mnemonicParsing="false"
+                    prefHeight="48" prefWidth="200" text="Valider">
+                <font><Font size="16"/></font>
+            </Button>
+
+        </VBox>
+    </StackPane>
 </VBox>
