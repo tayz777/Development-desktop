@@ -118,7 +118,7 @@
 }
 
 .featured-cover-full {
-    -fx-background-color: linear-gradient(to bottom, #1e3870, #0d1f45);
+    -fx-background-color: linear-gradient(to bottom, rgba(30,56,112,0.35), rgba(10,22,40,0.75));
     -fx-background-radius: 16;
 }
 
@@ -131,7 +131,7 @@
 /* ── Cartes jeux ──────────────────────────────────────────────────────────── */
 
 .game-card {
-    -fx-background-color: #0d1f45;
+    -fx-background-color: rgba(13,31,69,0.5);
     -fx-background-radius: 12;
     -fx-border-color: #1e3870;
     -fx-border-radius: 12;
@@ -140,7 +140,7 @@
 }
 
 .game-card:hover {
-    -fx-background-color: #1a2f5a;
+    -fx-background-color: rgba(26,47,90,0.6);
     -fx-border-color: #5b3fd4;
 }
 

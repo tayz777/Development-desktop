@@ -66,7 +66,7 @@
                     <ImageView fx:id="avatarSidebar" fitWidth="60" fitHeight="60"
                                preserveRatio="true" smooth="true"/>
                 </StackPane>
-                <Label text="Nom d'utilisateur" styleClass="username-label"/>
+                <Label fx:id="usernameLabel" text="Nom d'utilisateur" styleClass="username-label"/>
             </VBox>
 
         </VBox>
@@ -101,11 +101,10 @@
                         <padding><Insets top="20" right="24" bottom="24" left="24"/></padding>
 
                         <!-- Carte jeu aléatoire mise en avant -->
-                        <StackPane styleClass="featured-card" prefHeight="200" minHeight="160"
+                        <StackPane fx:id="featuredCard" styleClass="featured-card" prefHeight="200" minHeight="160"
                                    VBox.vgrow="SOMETIMES"
                                    onMouseClicked="#onFeaturedCardClick">
-                            <ImageView fx:id="featuredImage" fitWidth="9999" fitHeight="200"
-                                       preserveRatio="false" smooth="true" opacity="0.55"
+                            <ImageView fx:id="featuredImage" smooth="true"
                                        StackPane.alignment="CENTER"/>
                             <Region styleClass="featured-cover-full"/>
                             <VBox alignment="BOTTOM_LEFT" StackPane.alignment="BOTTOM_LEFT">
@@ -119,8 +118,8 @@
                             <StackPane fx:id="gameCard1" styleClass="game-card"
                                        HBox.hgrow="ALWAYS" prefWidth="0" prefHeight="135" minHeight="135"
                                        onMouseClicked="#onGameCard1Click">
-                                <ImageView fx:id="cardImage1" fitWidth="9999" fitHeight="135"
-                                           preserveRatio="false" smooth="true" opacity="0.55"/>
+                                <ImageView fx:id="cardImage1" smooth="true" StackPane.alignment="CENTER"/>
+                                <Region styleClass="card-cover-overlay"/>
                                 <VBox alignment="BOTTOM_LEFT" StackPane.alignment="BOTTOM_LEFT">
                                     <padding><Insets bottom="12" left="14"/></padding>
                                     <Label fx:id="gameCard1Title" text="" styleClass="game-card-title"/>
@@ -129,8 +128,8 @@
                             <StackPane fx:id="gameCard2" styleClass="game-card"
                                        HBox.hgrow="ALWAYS" prefWidth="0" prefHeight="135" minHeight="135"
                                        onMouseClicked="#onGameCard2Click">
-                                <ImageView fx:id="cardImage2" fitWidth="9999" fitHeight="135"
-                                           preserveRatio="false" smooth="true" opacity="0.55"/>
+                                <ImageView fx:id="cardImage2" smooth="true" StackPane.alignment="CENTER"/>
+                                <Region styleClass="card-cover-overlay"/>
                                 <VBox alignment="BOTTOM_LEFT" StackPane.alignment="BOTTOM_LEFT">
                                     <padding><Insets bottom="12" left="14"/></padding>
                                     <Label fx:id="gameCard2Title" text="" styleClass="game-card-title"/>
@@ -139,8 +138,8 @@
                             <StackPane fx:id="gameCard3" styleClass="game-card"
                                        HBox.hgrow="ALWAYS" prefWidth="0" prefHeight="135" minHeight="135"
                                        onMouseClicked="#onGameCard3Click">
-                                <ImageView fx:id="cardImage3" fitWidth="9999" fitHeight="135"
-                                           preserveRatio="false" smooth="true" opacity="0.55"/>
+                                <ImageView fx:id="cardImage3" smooth="true" StackPane.alignment="CENTER"/>
+                                <Region styleClass="card-cover-overlay"/>
                                 <VBox alignment="BOTTOM_LEFT" StackPane.alignment="BOTTOM_LEFT">
                                     <padding><Insets bottom="12" left="14"/></padding>
                                     <Label fx:id="gameCard3Title" text="" styleClass="game-card-title"/>

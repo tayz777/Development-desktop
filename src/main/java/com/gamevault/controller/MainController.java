@@ -14,8 +14,8 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.geometry.Insets;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -40,6 +40,7 @@ public class MainController implements Initializable {
     // ── Topbar ────────────────────────────────────────────────────────────
     @FXML private ImageView avatarTopBar;
     @FXML private TextField searchField;
+    @FXML private Label     usernameLabel;
 
     // ── Contenu principal (responsive) ──────────────────────────────────
     @FXML private ScrollPane mainScrollPane;
@@ -64,6 +65,10 @@ public class MainController implements Initializable {
     @FXML private Label     gameCard1Title;
     @FXML private Label     gameCard2Title;
     @FXML private Label     gameCard3Title;
+    @FXML private StackPane featuredCard;
+    @FXML private StackPane gameCard1;
+    @FXML private StackPane gameCard2;
+    @FXML private StackPane gameCard3;
     @FXML private ImageView featuredImage;
     @FXML private ImageView cardImage1;
     @FXML private ImageView cardImage2;
@@ -78,6 +83,8 @@ public class MainController implements Initializable {
         loadImage("/images/logo-tete-dragon.png", avatarTopBar);
         loadImage("/images/logo-tete-dragon.png", avatarSidebar);
         setActiveNav(btnAccueil);
+        if (usernameLabel != null)
+            usernameLabel.setText(com.gamevault.util.UserSession.getUsername());
         mainScrollPane.viewportBoundsProperty().addListener((obs, o, bounds) ->
                 contentVBox.setMinHeight(bounds.getHeight())
         );
@@ -96,7 +103,8 @@ public class MainController implements Initializable {
         currentDetailGame = games.get(new Random().nextInt(games.size()));
         showInOverlay(currentDetailGame);
         featuredTitle.setText(currentDetailGame.getTitle());
-        applyCover(currentDetailGame, featuredImage);
+        loadCoverInto(currentDetailGame, featuredImage);
+        bindAndClip(featuredImage, featuredCard, 14);
     }
 
     private void loadGameCards() {
@@ -106,7 +114,8 @@ public class MainController implements Initializable {
 
         Random rnd = new Random();
         List<Label>     labels  = List.of(gameCard1Title, gameCard2Title, gameCard3Title);
-        List<ImageView> images  = List.of(cardImage1, cardImage2, cardImage3);
+        List<ImageView> ivs     = List.of(cardImage1, cardImage2, cardImage3);
+        List<StackPane> panes   = List.of(gameCard1, gameCard2, gameCard3);
         cardGames.clear();
 
         // Pool sans featured sauf si pas assez de jeux
@@ -118,7 +127,8 @@ public class MainController implements Initializable {
             Game g = pool.get(rnd.nextInt(pool.size()));
             cardGames.add(g);
             labels.get(i).setText(g.getTitle());
-            applyCover(g, images.get(i));
+            loadCoverInto(g, ivs.get(i));
+            bindAndClip(ivs.get(i), panes.get(i), 14);
         }
     }
 
@@ -171,33 +181,58 @@ public class MainController implements Initializable {
         onCollection();
     }
 
-    private void applyCover(Game g, ImageView iv) {
-        if (iv == null) return;
-        String path = g.getCoverImagePath();
-        if (path == null || path.isBlank()) return;
+    private void bindAndClip(ImageView iv, StackPane pane, double radius) {
+        iv.setPreserveRatio(true);
 
-        // Racine projet = parent de target/classes
+        // Clip arrondi permanent
+        javafx.scene.shape.Rectangle clip = new javafx.scene.shape.Rectangle();
+        clip.widthProperty().bind(pane.widthProperty());
+        clip.heightProperty().bind(pane.heightProperty());
+        clip.setArcWidth(radius * 2);
+        clip.setArcHeight(radius * 2);
+        pane.setClip(clip);
+
+        // Taille fixée UNE SEULE FOIS quand la carte a sa largeur finale
+        javafx.beans.value.ChangeListener<Number>[] holder = new javafx.beans.value.ChangeListener[1];
+        holder[0] = (obs, old, w) -> {
+            if (w.doubleValue() > 0) {
+                iv.setFitWidth(w.doubleValue());
+                pane.widthProperty().removeListener(holder[0]);
+            }
+        };
+        if (pane.getWidth() > 0) {
+            iv.setFitWidth(pane.getWidth());
+        } else {
+            pane.widthProperty().addListener(holder[0]);
+        }
+    }
+
+    private void loadCoverInto(Game g, ImageView iv) {
+        if (iv == null || g.getCoverImagePath() == null) return;
+        String path = g.getCoverImagePath();
+        // Essai 1 : classpath (target/classes)
+        try (InputStream is = getClass().getResourceAsStream("/" + path)) {
+            if (is != null) { Image img = new Image(is); if (!img.isError()) { iv.setImage(img); return; } }
+        } catch (Exception ignored) {}
         try {
             java.io.File classesDir = new java.io.File(
                 getClass().getProtectionDomain().getCodeSource().getLocation().toURI()
             );
             java.io.File projectRoot = classesDir.getParentFile().getParentFile();
-            String[] roots = {
-                projectRoot + "/src/main/resources/",
-                projectRoot + "/target/classes/",
-                System.getProperty("user.dir") + "/src/main/resources/",
-                System.getProperty("user.dir") + "/"
-            };
-            for (String root : roots) {
+            for (String root : new String[]{
+                    projectRoot + "/src/main/resources/",
+                    projectRoot + "/target/classes/"}) {
                 java.io.File f = new java.io.File(root + path);
-                if (f.exists()) { iv.setImage(new Image(f.toURI().toString())); return; }
+                if (f.exists()) {
+                    try (InputStream is2 = new java.io.FileInputStream(f)) {
+                        Image img = new Image(is2);
+                        if (!img.isError()) { iv.setImage(img); return; }
+                    }
+                }
             }
         } catch (Exception ignored) {}
-
-        try (InputStream is = getClass().getResourceAsStream("/" + path)) {
-            if (is != null) iv.setImage(new Image(is));
-        } catch (Exception ignored) {}
     }
+
 
     // ── Chargement d'image ───────────────────────────────────────────────
 

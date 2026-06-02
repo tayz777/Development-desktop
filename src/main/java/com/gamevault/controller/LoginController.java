@@ -32,6 +32,8 @@ public class LoginController {
             return;
         }
 
+        com.gamevault.util.UserSession.setUsername(username);
+
         try {
             // 1. Charger la page principale (main.fxml)
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));

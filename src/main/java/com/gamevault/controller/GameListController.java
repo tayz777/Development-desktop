@@ -73,33 +73,29 @@ public class GameListController {
         }
     }
 
-    private javafx.scene.Node loadCover(Game g, ImageView iv, Region placeholder) {
+    private javafx.scene.image.Image loadCoverImage(Game g) {
         String path = g.getCoverImagePath();
-        if (path != null && !path.isBlank()) {
-            try {
-                java.io.File classesDir = new java.io.File(
-                    getClass().getProtectionDomain().getCodeSource().getLocation().toURI()
-                );
-                java.io.File projectRoot = classesDir.getParentFile().getParentFile();
-                String[] roots = {
+        if (path == null || path.isBlank()) return null;
+        try (InputStream is = getClass().getResourceAsStream("/" + path)) {
+            if (is != null) return new javafx.scene.image.Image(is);
+        } catch (Exception ignored) {}
+        try {
+            java.io.File classesDir = new java.io.File(
+                getClass().getProtectionDomain().getCodeSource().getLocation().toURI()
+            );
+            java.io.File projectRoot = classesDir.getParentFile().getParentFile();
+            for (String root : new String[]{
                     projectRoot + "/src/main/resources/",
-                    projectRoot + "/target/classes/",
-                    System.getProperty("user.dir") + "/src/main/resources/",
-                    System.getProperty("user.dir") + "/"
-                };
-                for (String root : roots) {
-                    java.io.File f = new java.io.File(root + path);
-                    if (f.exists()) {
-                        iv.setImage(new javafx.scene.image.Image(f.toURI().toString()));
-                        return iv;
+                    projectRoot + "/target/classes/"}) {
+                java.io.File f = new java.io.File(root + path);
+                if (f.exists()) {
+                    try (InputStream is2 = new java.io.FileInputStream(f)) {
+                        return new javafx.scene.image.Image(is2);
                     }
                 }
-            } catch (Exception ignored) {}
-            try (InputStream is = getClass().getResourceAsStream("/" + path)) {
-                if (is != null) { iv.setImage(new javafx.scene.image.Image(is)); return iv; }
-            } catch (Exception ignored) {}
-        }
-        return placeholder;
+            }
+        } catch (Exception ignored) {}
+        return null;
     }
 
     private void loadImage(String path, ImageView target) {
@@ -132,10 +128,10 @@ public class GameListController {
     }
 
     private void setupColumns() {
-        // Cover — image ou placeholder
+        // Cover — ImageView comme les logos
         colCover.setCellFactory(col -> new TableCell<>() {
-            private final ImageView iv          = new ImageView();
-            private final Region    placeholder = new Region();
+            private final ImageView iv = new ImageView();
+            private final Region placeholder = new Region();
             {
                 iv.setFitWidth(48); iv.setFitHeight(64);
                 iv.setPreserveRatio(true); iv.setSmooth(true);
@@ -149,7 +145,9 @@ public class GameListController {
                 super.updateItem(item, empty);
                 if (empty) { setGraphic(null); return; }
                 Game g = getTableView().getItems().get(getIndex());
-                setGraphic(loadCover(g, iv, placeholder));
+                Image img = loadCoverImage(g);
+                if (img != null) { iv.setImage(img); setGraphic(iv); }
+                else setGraphic(placeholder);
                 setAlignment(Pos.CENTER);
             }
         });

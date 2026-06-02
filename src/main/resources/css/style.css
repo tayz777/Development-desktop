@@ -144,7 +144,12 @@
     -fx-border-width: 2;
 }
 .featured-cover-full {
-    -fx-background-color: #1a3060;
+    -fx-background-color: linear-gradient(to top, rgba(6,15,40,0.80) 0%, rgba(6,15,40,0.10) 60%, transparent 100%);
+    -fx-background-radius: 14;
+}
+
+.card-cover-overlay {
+    -fx-background-color: linear-gradient(to top, rgba(6,15,40,0.75) 0%, transparent 70%);
     -fx-background-radius: 14;
 }
 .featured-title {
